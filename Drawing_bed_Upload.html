@@ -9,28 +9,40 @@
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;  /* 确保 body 没有默认的外边距 */
-      background-color: #f4f6f8;
-  }
+   body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0; /* 确保 body 没有默认的外边距 */
+  background-color: #f4f6f8;
+}
 
-  .uploader-container {
-    width: 50vw; /* 宽度为视口的 50% */
-    height: 50vh; /* 高度为视口的 50% */
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;  /* 垂直居中 */
-    justify-content: center; /* 水平居中 */
-    text-align: center;
-  }
+.uploader-container {
+  width: 50vw; /* 宽度为视口的 50% */
+  height: 50vh; /* 高度为视口的 50% */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  text-align: center;
+}
+
+.el-upload__inner {
+  width: 100%; /* 上传区域宽度自适应 */
+  max-width: 100%; /* 最大宽度为父容器的 100% */
+}
+
+.el-upload-dragger {
+  width: 100%; /* 上传拖拽区域宽度自适应 */
+  max-width: 100%; /* 最大宽度为父容器的 100% */
+  padding: 30px 0; /* 增加上下内边距 */
+  box-sizing: border-box; /* 确保 padding 不影响宽度 */
+}
   </style>
 </head>
 <body>
