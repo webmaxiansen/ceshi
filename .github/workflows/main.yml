@@ -1,1 +1,28 @@
+name: Upload Image to GitHub
+
+on:
+  push:
+    branches:
+      - main  # 监听主分支的 push 事件
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up environment variables
+        run: |
+          echo "GITHUB_OWNER=${{ secrets.GITHUB_OWNER }}" >> $GITHUB_ENV
+          echo "GITHUB_REPO=${{ secrets.GITHUB_REPO }}" >> $GITHUB_ENV
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Build and Deploy
+        run: |
+          # 这里可以进行构建前端代码，并确保它能够从环境变量中读取信息
+          # 比如使用 Node.js 构建应用
+          # npm install
+          # npm run build
 
