@@ -29,33 +29,82 @@
       margin-bottom: 20px;
     }
 
+    /* 自定义上传区域样式 */
     .custom-upload-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 15px 20px;
+      padding: 30px;
+      width: 100%;
+      height: 300px;
       border: 2px dashed #007bff;
       background-color: #f9f9f9;
       color: #007bff;
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      position: relative;
     }
 
     .custom-upload-btn:hover {
       background-color: #f1f1f1;
     }
 
-    .upload-preview {
-      margin-top: 20px;
-      text-align: center;
+    .custom-upload-btn::before,
+    .custom-upload-btn::after {
+      content: "";
+      position: absolute;
+      background-color: #007bff;
+      width: 2px;
+      height: 40px;
     }
 
-    .upload-preview img {
-      max-width: 100%;
-      max-height: 200px;
+    .custom-upload-btn::before {
+      transform: rotate(45deg);
+    }
+
+    .custom-upload-btn::after {
+      transform: rotate(-45deg);
+    }
+
+    /* 图片预览部分 */
+    .image-preview-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      margin-top: 20px;
+    }
+
+    .image-preview-container img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       border-radius: 8px;
+    }
+
+    .image-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .image-item .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .image-item .close-btn:hover {
+      background-color: rgba(255, 0, 0, 0.7);
     }
 
     .btn-custom {
@@ -84,15 +133,15 @@
 
     <!-- Custom Upload Button -->
     <div class="custom-upload-btn" id="upload-area">
-      <span>Click to Upload Image</span>
-      <input type="file" id="file-input" class="file-input" accept="image/*" />
+      <span>Click to Upload Images</span>
+      <input type="file" id="file-input" class="file-input" accept="image/*" multiple />
     </div>
 
-    <!-- Image Preview -->
-    <div class="upload-preview" id="image-preview"></div>
+    <!-- Image Preview Grid -->
+    <div id="image-preview" class="image-preview-container"></div>
 
     <!-- Upload Button -->
-    <button id="upload-btn" class="btn btn-custom" disabled>Upload Image</button>
+    <button id="upload-btn" class="btn btn-custom" disabled>Upload Images</button>
 
     <!-- Result Display -->
     <div id="result" class="mt-3"></div>
@@ -117,45 +166,60 @@
     // 当文件选择后，更新按钮和预览
     fileInput.addEventListener('change', () => {
       if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
+        const files = Array.from(fileInput.files);
+        
+        // 清空之前的图片
+        imagePreview.innerHTML = '';
+        
+        files.slice(0, 9).forEach(file => {
+          const reader = new FileReader();
 
-        reader.onload = (e) => {
-          // 显示预览
-          const previewImage = `<img src="${e.target.result}" alt="Image Preview" class="img-fluid rounded">`;
-          imagePreview.innerHTML = previewImage;
+          reader.onload = (e) => {
+            const imageItem = document.createElement('div');
+            imageItem.classList.add('image-item');
 
-          // 启用上传按钮
-          uploadBtn.disabled = false;
-        };
+            // 图片元素
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            imageItem.appendChild(img);
 
-        reader.readAsDataURL(file);
+            // 关闭按钮
+            const closeBtn = document.createElement('button');
+            closeBtn.classList.add('close-btn');
+            closeBtn.innerHTML = 'X';
+            imageItem.appendChild(closeBtn);
+
+            // 添加事件，点击X按钮移除图片
+            closeBtn.addEventListener('click', () => {
+              imageItem.remove();
+              if (imagePreview.children.length === 0) {
+                uploadBtn.disabled = true;
+              }
+            });
+
+            imagePreview.appendChild(imageItem);
+
+            // 启用上传按钮
+            uploadBtn.disabled = false;
+          };
+
+          reader.readAsDataURL(file);
+        });
       }
     });
 
-    // 重新命名文件为 yyyy-mm-dd 格式
-    function formatDate(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-
     // 上传按钮的点击事件
     uploadBtn.addEventListener('click', () => {
-      const file = fileInput.files[0];
+      const files = Array.from(fileInput.files);
 
-      if (!file) return;
-
-      // 获取文件的日期格式名称
-      const newFileName = formatDate(new Date()) + '.' + file.name.split('.').pop();
+      if (files.length === 0) return;
 
       // 模拟文件上传
-      result.innerHTML = `<p>Uploading <strong>${newFileName}</strong>...</p>`;
+      result.innerHTML = `<p>Uploading ${files.length} image(s)...</p>`;
 
       // 模拟延迟上传操作（可以替换为实际上传代码）
       setTimeout(() => {
-        result.innerHTML = `<p>Image uploaded successfully! <a href="#">View Image</a></p>`;
+        result.innerHTML = `<p>Images uploaded successfully! <a href="#">View Images</a></p>`;
         // 这里可以返回 GitHub API 上传后的文件 URL
       }, 2000);
     });
