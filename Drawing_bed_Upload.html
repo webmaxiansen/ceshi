@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Image Uploader</title>
+
+  <!-- 引入 Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRAB+1h7Q4Jx3hQj2l3b5w0T3f6D5lRrX5zQk5Xn5R5Jh5gFf1bP5lf5F" crossorigin="anonymous">
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #495057;
+    }
+    #image-preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .btn-custom {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-custom:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Image to GitHub</h1>
+
+    <!-- File Input for Image -->
+    <div class="mb-3">
+      <label for="file-input" class="form-label">Choose an image</label>
+      <input type="file" class="form-control" id="file-input" accept="image/*" />
+    </div>
+
+    <!-- Display Image Preview -->
+    <div id="image-preview"></div>
+
+    <!-- Upload Button -->
+    <button id="upload-btn" class="btn btn-custom w-100" disabled>Upload Image</button>
+
+    <!-- Result Display -->
+    <div id="result"></div>
+  </div>
+
+  <!-- 引入 Bootstrap JS 和 Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybPx3l8z5xFZl3+K5ffqf5p6PzDlyJgG5gX5+g8bMXOZ9yS0o0" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0L6a3RRMp5Fv7f7xbp3A1FEn4zo2y1M5D5d4u7ybM2IZEnw4" crossorigin="anonymous"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
