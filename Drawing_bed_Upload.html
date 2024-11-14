@@ -18,41 +18,12 @@
       background-color: #f4f6f8;
     }
     .uploader-container {
-      width: 500px;
+      width: 400px;
       padding: 20px;
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-    }
-    .preview-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .preview-grid img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      margin: 5px;
-      border-radius: 4px;
-      position: relative;
-    }
-    .preview-grid img::before {
-      content: '×';
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      background: red;
-      color: white;
-      border-radius: 50%;
-      padding: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
   </style>
 </head>
@@ -68,13 +39,11 @@
       :on-change="handleChange"
       :file-list="fileList"
       :limit="9"
-      :on-remove="handleRemove"
-      :before-upload="beforeUpload"
-      style="width: 100%; height: 200px; border: 2px dashed #d9d9d9; border-radius: 8px; padding: 40px 20px;">
+      :on-remove="handleRemove">
       
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或 <em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">支持 jpg、png 格式，最大 10MB</div>
+      <div class="el-upload__tip" slot="tip">支持 jpg、png 格式</div>
     </el-upload>
     
     <!-- 图片预览区域 -->
@@ -84,14 +53,7 @@
         :key="index"
         :src="file.url"
         :preview-src-list="previewList"
-        style="width: 100px; height: 100px; margin: 5px; position: relative;">
-        
-        <!-- 删除按钮 -->
-        <span 
-          @click="handleRemove(file, fileList)"
-          style="position: absolute; top: -10px; right: -10px; background: red; color: white; border-radius: 50%; cursor: pointer; padding: 2px 6px;">
-          ×
-        </span>
+        style="width: 100px; height: 100px; margin: 5px;">
       </el-image>
     </div>
   </div>
@@ -124,10 +86,6 @@
               reader.onload = e => {
                 f.url = e.target.result;
               };
-              reader.onerror = () => {
-                // 文件读取失败时显示错误信息
-                this.$message.error('图片加载失败，请重试');
-              };
               reader.readAsDataURL(f.raw);
             }
             return f;
@@ -136,14 +94,6 @@
         // 处理文件删除
         handleRemove(file, fileList) {
           this.fileList = fileList;
-        },
-        // 限制文件大小
-        beforeUpload(file) {
-          const isLt10M = file.size / 1024 / 1024 < 10;
-          if (!isLt10M) {
-            this.$message.error('上传图片大小不能超过 10MB!');
-          }
-          return isLt10M;
         }
       }
     });
