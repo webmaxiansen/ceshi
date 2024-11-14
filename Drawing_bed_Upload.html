@@ -4,69 +4,161 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub Image Uploader</title>
-
-  <!-- 引入 Bootstrap CSS -->
+  
+  <!-- 引入 Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRAB+1h7Q4Jx3hQj2l3b5w0T3f6D5lRrX5zQk5Xn5R5Jh5gFf1bP5lf5F" crossorigin="anonymous">
 
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f8f9fa;
-      padding: 30px;
+      background-color: #f4f6f8;
+      padding: 50px 0;
     }
+
     .container {
-      max-width: 600px;
+      max-width: 700px;
       background-color: white;
       padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+
     h1 {
       text-align: center;
+      color: #333;
       margin-bottom: 20px;
-      color: #495057;
     }
-    #image-preview {
+
+    .custom-upload-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 20px;
+      border: 2px dashed #007bff;
+      background-color: #f9f9f9;
+      color: #007bff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .custom-upload-btn:hover {
+      background-color: #f1f1f1;
+    }
+
+    .upload-preview {
       margin-top: 20px;
       text-align: center;
     }
-    #result {
-      margin-top: 20px;
-      text-align: center;
+
+    .upload-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
     }
+
     .btn-custom {
       background-color: #007bff;
       color: white;
+      width: 100%;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 20px;
     }
+
     .btn-custom:hover {
       background-color: #0056b3;
+    }
+
+    .file-input {
+      display: none;
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <h1>Upload Image to GitHub</h1>
 
-    <!-- File Input for Image -->
-    <div class="mb-3">
-      <label for="file-input" class="form-label">Choose an image</label>
-      <input type="file" class="form-control" id="file-input" accept="image/*" />
+    <!-- Custom Upload Button -->
+    <div class="custom-upload-btn" id="upload-area">
+      <span>Click to Upload Image</span>
+      <input type="file" id="file-input" class="file-input" accept="image/*" />
     </div>
 
-    <!-- Display Image Preview -->
-    <div id="image-preview"></div>
+    <!-- Image Preview -->
+    <div class="upload-preview" id="image-preview"></div>
 
     <!-- Upload Button -->
-    <button id="upload-btn" class="btn btn-custom w-100" disabled>Upload Image</button>
+    <button id="upload-btn" class="btn btn-custom" disabled>Upload Image</button>
 
     <!-- Result Display -->
-    <div id="result"></div>
+    <div id="result" class="mt-3"></div>
   </div>
 
-  <!-- 引入 Bootstrap JS 和 Popper -->
+  <!-- 引入 Bootstrap 5 和 Popper JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybPx3l8z5xFZl3+K5ffqf5p6PzDlyJgG5gX5+g8bMXOZ9yS0o0" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0L6a3RRMp5Fv7f7xbp3A1FEn4zo2y1M5D5d4u7ybM2IZEnw4" crossorigin="anonymous"></script>
 
-  <script src="script.js"></script>
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const uploadArea = document.getElementById('upload-area');
+    const uploadBtn = document.getElementById('upload-btn');
+    const imagePreview = document.getElementById('image-preview');
+    const result = document.getElementById('result');
+
+    // 点击上传区域打开文件选择
+    uploadArea.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // 当文件选择后，更新按钮和预览
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          // 显示预览
+          const previewImage = `<img src="${e.target.result}" alt="Image Preview" class="img-fluid rounded">`;
+          imagePreview.innerHTML = previewImage;
+
+          // 启用上传按钮
+          uploadBtn.disabled = false;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 重新命名文件为 yyyy-mm-dd 格式
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // 上传按钮的点击事件
+    uploadBtn.addEventListener('click', () => {
+      const file = fileInput.files[0];
+
+      if (!file) return;
+
+      // 获取文件的日期格式名称
+      const newFileName = formatDate(new Date()) + '.' + file.name.split('.').pop();
+
+      // 模拟文件上传
+      result.innerHTML = `<p>Uploading <strong>${newFileName}</strong>...</p>`;
+
+      // 模拟延迟上传操作（可以替换为实际上传代码）
+      setTimeout(() => {
+        result.innerHTML = `<p>Image uploaded successfully! <a href="#">View Image</a></p>`;
+        // 这里可以返回 GitHub API 上传后的文件 URL
+      }, 2000);
+    });
+  </script>
 </body>
 </html>
